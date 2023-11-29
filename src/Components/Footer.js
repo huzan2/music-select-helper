@@ -3,10 +3,18 @@ import IconGithub from "../images/icon-github.svg";
 import IconInsta from "../images/icon-instagram.svg";
 import { useRecoilState } from "recoil";
 import { isLoggedIn } from "../util/atom";
+import { useSetRecoilState } from "recoil";
+import { isModalOpen } from "../util/atom";
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
+  const setIsModalOpen = useSetRecoilState(isModalOpen);
   const onClickGithubIcon = () => {
     window.open("https://github.com/huzan2/music-select-helper");
+  };
+  const navigate = useNavigate();
+  const onClickSignUp = () => {
+    navigate("/signup");
   };
   const [LoggedIn, setLoggedIn] = useRecoilState(isLoggedIn);
   return (
@@ -31,13 +39,19 @@ const Footer = () => {
             <p
               className="mx-2 ml-4 cursor-pointer hover:underline"
               onClick={() => {
-                alert("로그인 성공~!");
-                setLoggedIn(true);
+                //alert("로그인 성공~!");
+                //setLoggedIn(true);
+                setIsModalOpen(true);
               }}
             >
               로그인
             </p>
-            <p className="mx-2 cursor-pointer hover:underline">회원가입</p>
+            <p
+              onClick={onClickSignUp}
+              className="mx-2 cursor-pointer hover:underline"
+            >
+              회원가입
+            </p>
           </>
         )}
       </div>

@@ -1,13 +1,8 @@
 import { atom } from "recoil";
 
-export const modalState = atom({
-  key: "modalState",
-  default: {
-    isOpen: false,
-    title: "",
-    content: () => {},
-    callback: () => {},
-  },
+export const isModalOpen = atom({
+  key: "isModalOpen",
+  default: false,
 });
 
 export const isLoggedIn = atom({
