@@ -4,7 +4,7 @@ import IconInsta from "../images/icon-instagram.svg";
 import { useRecoilState } from "recoil";
 import { isLoggedIn } from "../util/atom";
 import { useSetRecoilState } from "recoil";
-import { isModalOpen } from "../util/atom";
+import { isModalOpen, userDataState } from "../util/atom";
 import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
@@ -17,12 +17,14 @@ const Footer = () => {
     navigate("/signup");
   };
   const [LoggedIn, setLoggedIn] = useRecoilState(isLoggedIn);
+  // eslint-disable-next-line
+  const [userData, setUserData] = useRecoilState(userDataState);
   return (
     <div className="flex absolute flex-col items-center justify-center w-full bg-gray-300 bottom-0 right-0 z-10">
       <div className="flex items-center justify-center py-2 text-center text-sm font-light">
         {LoggedIn ? (
           <>
-            <p className="cursor-pointer hover:underline">홍길동</p>
+            <p className="cursor-pointer hover:underline">{userData.name}</p>
             <p className="ml-1"> 님, 환영합니다.</p>
             <p
               className="hover:underline cursor-pointer ml-3"
@@ -39,8 +41,6 @@ const Footer = () => {
             <p
               className="mx-2 ml-4 cursor-pointer hover:underline"
               onClick={() => {
-                //alert("로그인 성공~!");
-                //setLoggedIn(true);
                 setIsModalOpen(true);
               }}
             >

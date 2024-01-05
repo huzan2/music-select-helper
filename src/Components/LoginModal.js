@@ -1,15 +1,25 @@
 import { useEffect, useRef, useState } from "react";
-import { useSetRecoilState } from "recoil";
-import { isModalOpen } from "../util/atom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { isLoggedIn, isModalOpen, userDataState } from "../util/atom";
 import CustomButton from "./CustomButton";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const LoginModal = () => {
+  axios.defaults.baseURL = process.env.REACT_APP_SERVER_URI;
+  axios.defaults.withCredentials = true;
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
   const navigate = useNavigate();
   const modal = useRef();
   const setIsModalOpen = useSetRecoilState(isModalOpen);
+  const setIsLoggedIn = useSetRecoilState(isLoggedIn);
+  const [userData, setUserData] = useRecoilState(userDataState);
+  const handleEnter = (e) => {
+    if (e.key === "Enter") {
+      onClickLoginButton();
+    }
+  };
   const onClickInvisible = () => {
     setIsModalOpen(false);
   };
@@ -23,8 +33,29 @@ const LoginModal = () => {
   const onChangePw = (e) => {
     setPw(e.target.value);
   };
-  const onClickLoginButton = () => {
-    console.log(`email: ` + email, `pw: ` + pw);
+  const onClickLoginButton = async () => {
+    const jsonbody = {
+      email: email,
+      password: pw,
+    };
+    // eslint-disable-next-line
+    const res = await axios
+      .post("/api/users/login", JSON.stringify(jsonbody), {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+      .then((e) => {
+        if (e.status === 200) {
+          let temp = { ...userData };
+          temp.name = "홍길동";
+          setUserData(temp);
+          alert("로그인 성공");
+          setIsLoggedIn(true);
+          setIsModalOpen(false);
+          console.log(e);
+        }
+      });
   };
   useEffect(() => {
     document.body.style = `overflow: hidden`;
@@ -62,6 +93,7 @@ const LoginModal = () => {
             name="password"
             type="password"
             onChange={onChangePw}
+            onKeyUp={handleEnter}
             className="block w-full rounded-md pl-2 border-0 text-gray-900 shadow-sm placeholder:text-gray-400 py-1.5 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
           />
           <CustomButton title={"로그인"} onClick={onClickLoginButton} />

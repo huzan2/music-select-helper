@@ -6,7 +6,7 @@ const Header = () => {
     navigate("/");
   };
   return (
-    <div className="text-center text-4xl cursor-pointer">
+    <div className="text-center text-4xl cursor-pointer font-bold">
       <p onClick={onClickLogo}>개쩌는 로고</p>
     </div>
   );
